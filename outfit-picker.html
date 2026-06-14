@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>Outfit Picker</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff; --bg2: #f5f4f1; --bg3: #eeecea;
+    --text: #1a1a1a; --text2: #6b6a67; --text3: #9e9d9a;
+    --border: rgba(0,0,0,0.10); --border2: rgba(0,0,0,0.18);
+    --radius-md: 8px; --radius-lg: 14px; --radius-xl: 20px;
+    --serif: Georgia, 'Times New Roman', serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a1a; --bg2: #242424; --bg3: #2e2e2e;
+      --text: #f0efe8; --text2: #9e9d97; --text3: #6b6a65;
+      --border: rgba(255,255,255,0.10); --border2: rgba(255,255,255,0.18);
+    }
+  }
+  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); }
+  #app { max-width: 430px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
+  .screen { display: none; flex: 1; flex-direction: column; padding: 1.25rem 1rem 90px; overflow-y: auto; }
+  .screen.active { display: flex; }
+  .nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; display: flex; background: var(--bg); border-top: 0.5px solid var(--border2); z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
+  .nav-tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 0 12px; cursor: pointer; border: none; background: none; color: var(--text3); font-size: 11px; font-family: var(--sans); transition: color .15s; -webkit-tap-highlight-color: transparent; }
+  .nav-tab i { font-size: 22px; }
+  .nav-tab.active { color: var(--text); }
+  .stitle { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .ssub { font-size: 13px; color: var(--text2); margin-bottom: 1.25rem; line-height: 1.4; }
+  .cat-tabs { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 1rem; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .cat-tabs::-webkit-scrollbar { display: none; }
+  .ct { white-space: nowrap; padding: 6px 13px; border-radius: 20px; border: 0.5px solid var(--border2); font-size: 13px; font-family: var(--sans); cursor: pointer; background: none; color: var(--text2); transition: all .15s; -webkit-tap-highlight-color: transparent; }
+  .ct.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+  .icard { background: var(--bg2); border-radius: var(--radius-lg); overflow: hidden; border: 0.5px solid var(--border); position: relative; }
+  .icard img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
+  .iph { width: 100%; aspect-ratio: 3/4; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-size: 40px; color: var(--text3); }
+  .icb { padding: 8px 10px 10px; }
+  .icl { font-size: 12px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ics { font-size: 11px; color: var(--text2); margin-top: 1px; }
+  .idel { position: absolute; top: 7px; right: 7px; width: 28px; height: 28px; border-radius: 50%; background: rgba(0,0,0,.50); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; -webkit-tap-highlight-color: transparent; }
+  .add-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 15px; border: 1.5px dashed var(--border2); border-radius: var(--radius-lg); background: none; cursor: pointer; color: var(--text2); font-size: 14px; font-family: var(--sans); width: 100%; margin-top: 1rem; -webkit-tap-highlight-color: transparent; }
+  .gen-btn { width: 100%; padding: 16px; background: var(--text); color: var(--bg); border: none; border-radius: var(--radius-lg); font-size: 16px; font-weight: 500; font-family: var(--sans); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 1rem; transition: opacity .15s; -webkit-tap-highlight-color: transparent; }
+  .gen-btn:disabled { opacity: .35; cursor: not-allowed; }
+  .info-box { background: var(--bg2); border-radius: var(--radius-md); padding: 12px 14px; font-size: 13px; color: var(--text2); line-height: 1.5; margin-bottom: 1.25rem; }
+  .outfit-card { background: var(--bg); border: 0.5px solid var(--border2); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+  .onum { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 3px; }
+  .otitle { font-size: 18px; font-weight: 500; font-family: var(--serif); color: var(--text); margin-bottom: 5px; font-style: italic; }
+  .oration { font-size: 13px; color: var(--text2); line-height: 1.55; margin-bottom: 1rem; }
+  .odiv { height: 0.5px; background: var(--border); margin-bottom: 1rem; }
+  .oitems { display: flex; flex-direction: column; gap: 8px; }
+  .orow { display: flex; align-items: center; gap: 10px; }
+  .othumb { width: 42px; height: 52px; border-radius: 7px; object-fit: cover; border: 0.5px solid var(--border); flex-shrink: 0; }
+  .othumb-ph { width: 42px; height: 52px; border-radius: 7px; background: var(--bg2); border: 0.5px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--text3); }
+  .oiinfo { flex: 1; min-width: 0; }
+  .oicat { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; }
+  .oiname { font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .belt-rec { margin-top: 12px; padding: 10px 12px; background: var(--bg2); border-radius: 0 var(--radius-md) var(--radius-md) 0; border-left: 2px solid var(--border2); }
+  .belt-lbl { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 3px; }
+  .belt-txt { font-size: 13px; color: var(--text2); line-height: 1.45; }
+  .empty { text-align: center; padding: 3rem 1rem; color: var(--text2); }
+  .empty i { font-size: 44px; margin-bottom: 1rem; display: block; color: var(--text3); }
+  .empty p { font-size: 14px; line-height: 1.6; }
+  .spin-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 2rem; color: var(--text2); font-size: 14px; }
+  .spinner { width: 28px; height: 28px; border: 2px solid var(--border2); border-top-color: var(--text); border-radius: 50%; animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .toast { position: fixed; top: 1.25rem; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--bg); padding: 10px 18px; border-radius: 20px; font-size: 13px; z-index: 999; opacity: 0; transition: opacity .25s; pointer-events: none; white-space: nowrap; font-family: var(--sans); }
+  .toast.show { opacity: 1; }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200; align-items: flex-end; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--bg); border-radius: var(--radius-xl) var(--radius-xl) 0 0; padding: 1rem 1rem calc(1.5rem + env(safe-area-inset-bottom)); width: 100%; max-width: 430px; max-height: 88vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .mhandle { width: 36px; height: 4px; background: var(--border2); border-radius: 2px; margin: 0 auto 1.25rem; }
+  .mtitle { font-size: 18px; font-weight: 600; margin-bottom: 1.25rem; color: var(--text); }
+  .uarea { width: 100%; border: 1.5px dashed var(--border2); border-radius: var(--radius-lg); padding: 2rem 1rem; text-align: center; cursor: pointer; background: none; font-family: var(--sans); display: block; -webkit-tap-highlight-color: transparent; }
+  .uarea i { font-size: 32px; color: var(--text3); margin-bottom: 8px; display: block; }
+  .uarea p { font-size: 13px; color: var(--text2); }
+  .prev-img { width: 100%; max-height: 220px; object-fit: contain; border-radius: var(--radius-md); background: var(--bg2); display: none; margin-bottom: 1rem; }
+  .fg { margin-bottom: 1rem; }
+  .fl { font-size: 12px; color: var(--text2); margin-bottom: 5px; display: block; }
+  .finput, .fselect { width: 100%; padding: 11px 12px; border-radius: var(--radius-md); border: 0.5px solid var(--border2); background: var(--bg2); color: var(--text); font-size: 14px; font-family: var(--sans); -webkit-appearance: none; appearance: none; }
+  .btn-p { width: 100%; padding: 14px; background: var(--text); color: var(--bg); border: none; border-radius: var(--radius-lg); font-size: 15px; font-weight: 500; font-family: var(--sans); cursor: pointer; margin-top: 6px; -webkit-tap-highlight-color: transparent; }
+  .btn-p:disabled { opacity: .35; cursor: not-allowed; }
+  .btn-s { width: 100%; padding: 14px; background: none; color: var(--text2); border: 0.5px solid var(--border2); border-radius: var(--radius-lg); font-size: 15px; font-family: var(--sans); cursor: pointer; margin-top: 8px; -webkit-tap-highlight-color: transparent; }
+  #fi { display: none; }
+  .oload { display: none; }
+  .storage-bar { font-size: 11px; color: var(--text3); text-align: right; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="s-wardrobe" class="screen active">
+    <p class="stitle">My wardrobe</p>
+    <p class="ssub">Saved to this device — stays here between visits</p>
+    <div class="storage-bar" id="sbar"></div>
+    <div class="cat-tabs">
+      <button class="ct active" onclick="fCat(this,'all')">All</button>
+      <button class="ct" onclick="fCat(this,'jacket')">Jackets</button>
+      <button class="ct" onclick="fCat(this,'trouser')">Trousers</button>
+      <button class="ct" onclick="fCat(this,'shirt')">Shirts</button>
+      <button class="ct" onclick="fCat(this,'tie')">Ties</button>
+      <button class="ct" onclick="fCat(this,'shoe')">Shoes</button>
+      <button class="ct" onclick="fCat(this,'belt')">Belts</button>
+      <button class="ct" onclick="fCat(this,'sock')">Socks</button>
+    </div>
+    <div class="grid" id="grid"></div>
+    <button class="add-btn" onclick="openModal()"><i class="ti ti-plus"></i>Add item</button>
+  </div>
+
+  <div id="s-outfits" class="screen">
+    <p class="stitle">Get dressed</p>
+    <p class="ssub">3 outfits picked using colour theory and classic style rules</p>
+    <div class="info-box">Tap Generate — outfit suggestions appear below, styled around what's in your wardrobe.</div>
+    <button class="gen-btn" id="gbtn" onclick="genOutfits()"><i class="ti ti-sparkles"></i>Generate outfits</button>
+    <div class="oload" id="oload"><div class="spin-wrap"><div class="spinner"></div><span>Styling your outfits...</span></div></div>
+    <div id="oc"></div>
+  </div>
+
+  <nav class="nav">
+    <button class="nav-tab active" onclick="showS('wardrobe',this)"><i class="ti ti-hanger"></i>Wardrobe</button>
+    <button class="nav-tab" onclick="showS('outfits',this)"><i class="ti ti-shirt"></i>Outfits</button>
+  </nav>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="mhandle"></div>
+    <p class="mtitle">Add item</p>
+    <button class="uarea" id="uarea" onclick="document.getElementById('fi').click()">
+      <i class="ti ti-camera-upload"></i>
+      <p>Tap to take a photo or upload</p>
+    </button>
+    <img id="pimg" class="prev-img" alt="Preview" />
+    <input type="file" id="fi" accept="image/*" onchange="onFile(this)" />
+    <div class="fg" style="margin-top:1rem">
+      <label class="fl">Category</label>
+      <select class="fselect" id="icat">
+        <option value="jacket">Jacket / Suit jacket</option>
+        <option value="trouser">Trouser</option>
+        <option value="shirt">Shirt</option>
+        <option value="tie">Tie</option>
+        <option value="shoe">Shoes</option>
+        <option value="belt">Belt</option>
+        <option value="sock">Socks</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label class="fl">Name</label>
+      <input type="text" class="finput" id="iname" placeholder="e.g. Navy wool jacket" />
+    </div>
+    <button class="btn-p" id="sbtn" onclick="saveItem()" disabled>Save to wardrobe</button>
+    <button class="btn-s" onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'outfit_wardrobe_ls_v1';
+const ICONS = { jacket:'ti-jacket', trouser:'ti-fold-down', shirt:'ti-shirt', tie:'ti-tie', shoe:'ti-shoe', belt:'ti-circle-dashed', sock:'ti-sock' };
+let wardrobe = [], curFilter = 'all', pendImg = null;
+
+function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+function toast(msg, dur=2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+function loadWardrobe() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    wardrobe = raw ? JSON.parse(raw) : [];
+  } catch(e) { wardrobe = []; }
+  renderGrid();
+  updGen();
+  updateStorageBar();
+}
+
+function saveWardrobe() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(wardrobe));
+    updateStorageBar();
+  } catch(e) {
+    toast('Storage full — try removing some items');
+  }
+}
+
+function updateStorageBar() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY) || '';
+    const kb = Math.round(raw.length * 2 / 1024);
+    const mb = (kb / 1024).toFixed(1);
+    document.getElementById('sbar').textContent = `${wardrobe.length} item${wardrobe.length !== 1 ? 's' : ''} · ${kb > 1024 ? mb + ' MB' : kb + ' KB'} used`;
+  } catch(e) {}
+}
+
+function showS(n, btn) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('s-' + n).classList.add('active');
+  btn.classList.add('active');
+}
+
+function fCat(btn, cat) {
+  curFilter = cat;
+  document.querySelectorAll('.ct').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid();
+}
+
+function renderGrid() {
+  const g = document.getElementById('grid');
+  const items = curFilter === 'all' ? wardrobe : wardrobe.filter(i => i.category === curFilter);
+  if (!items.length) {
+    g.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2.5rem 0;color:var(--text3);font-size:13px;">No items in this category yet</div>';
+    return;
+  }
+  g.innerHTML = items.map(item => `
+    <div class="icard">
+      ${item.img ? `<img src="${item.img}" alt="${item.name}" />` : `<div class="iph"><i class="ti ${ICONS[item.category]||'ti-shirt'}"></i></div>`}
+      <div class="icb">
+        <div class="icl">${item.name}</div>
+        <div class="ics">${cap(item.category)}</div>
+      </div>
+      <button class="idel" onclick="delItem('${item.id}')" aria-label="Remove"><i class="ti ti-x" style="font-size:13px"></i></button>
+    </div>`).join('');
+}
+
+function delItem(id) {
+  wardrobe = wardrobe.filter(i => i.id !== id);
+  saveWardrobe(); renderGrid(); updGen();
+  toast('Item removed');
+}
+
+function updGen() { document.getElementById('gbtn').disabled = wardrobe.length < 2; }
+
+function openModal() {
+  pendImg = null;
+  document.getElementById('pimg').style.display = 'none';
+  document.getElementById('uarea').style.display = 'block';
+  document.getElementById('iname').value = '';
+  document.getElementById('fi').value = '';
+  document.getElementById('sbtn').disabled = true;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+function onFile(inp) {
+  const f = inp.files[0]; if (!f) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const original = e.target.result;
+    compressImage(original, 800, 0.7, (compressed) => {
+      pendImg = compressed;
+      const pi = document.getElementById('pimg');
+      pi.src = pendImg; pi.style.display = 'block';
+      document.getElementById('uarea').style.display = 'none';
+      document.getElementById('sbtn').disabled = false;
+    });
+  };
+  reader.readAsDataURL(f);
+}
+
+function compressImage(dataUrl, maxDim, quality, cb) {
+  const img = new Image();
+  img.onload = () => {
+    let w = img.width, h = img.height;
+    if (w > maxDim || h > maxDim) {
+      if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+      else { w = Math.round(w * maxDim / h); h = maxDim; }
+    }
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+    cb(canvas.toDataURL('image/jpeg', quality));
+  };
+  img.src = dataUrl;
+}
+
+function saveItem() {
+  const cat = document.getElementById('icat').value;
+  const name = document.getElementById('iname').value.trim() || cap(cat);
+  wardrobe.push({ id: Date.now().toString(), category: cat, name, img: pendImg, added: new Date().toISOString() });
+  saveWardrobe(); renderGrid(); updGen();
+  closeModal(); toast('Item saved');
+}
+
+function genOutfits() {
+  const catalogue = wardrobe.map(i => ({ id: i.id, category: i.category, name: i.name }));
+  const hasBelts = wardrobe.some(i => i.category === 'belt');
+
+  const prompt = `OUTFIT_REQUEST: Please suggest 3 stylish work outfits from my wardrobe. Apply real colour theory, tonal dressing, and pattern-mixing rules. Consider suit separates (e.g. navy jacket + grey trousers) where interesting. For each outfit include a belt recommendation — pick from the wardrobe if one suits, otherwise suggest ideal colour and style.
+
+Wardrobe: ${JSON.stringify(catalogue)}
+
+Rules: vary the 3 looks (e.g. one full suit, one separates, one smarter-casual). Avoid pattern clashes. Every outfit needs at least a jacket or trouser plus a shirt. ${hasBelts ? 'Pick the best belt from the wardrobe for each look where appropriate.' : 'No belts in wardrobe — suggest ideal belt for each look.'}
+
+Format each look clearly with: a title, a 2-sentence rationale, the items to wear, and the belt recommendation.`;
+
+  window.location.href = 'https://claude.ai/new?q=' + encodeURIComponent(prompt);
+}
+
+loadWardrobe();
+</script>
+</body>
+</html>
