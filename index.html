@@ -48,6 +48,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .wcard-cat{font-size:11px;color:var(--text2);margin-top:1px}
 
 /* OUTFITS */
+.season-select{width:100%;padding:12px 40px 12px 14px;margin-bottom:1rem;border:.5px solid var(--border2);border-radius:var(--radius-lg);background:var(--bg2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239e9d9a' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center;color:var(--text);font-size:15px;font-family:var(--sans);-webkit-appearance:none;appearance:none}
 .outfit-nav{display:flex;align-items:center;gap:8px;margin-bottom:1rem}
 .outfit-counter{flex:1;text-align:center;font-size:13px;color:var(--text2)}
 .btn-icon{width:40px;height:40px;border-radius:50%;border:.5px solid var(--border2);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);font-size:20px;-webkit-tap-highlight-color:transparent;flex-shrink:0}
@@ -99,10 +100,19 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 <div id="app">
   <div id="s-outfits" class="screen active">
     <p class="stitle">Get dressed</p>
-    <p class="ssub">75 autumn &amp; winter outfits — swipe through and pick your look</p>
+    <p class="ssub" id="osub"></p>
+    <label for="season" class="sr" style="position:absolute;left:-9999px">Season</label>
+    <select id="season" class="season-select" onchange="setSeason(this.value)">
+      <option value="autumn">Autumn</option>
+      <option value="winter">Winter</option>
+      <option value="spring">Spring</option>
+      <option value="summer">Summer</option>
+      <option value="hot">Hot day (no jacket)</option>
+      <option value="all">All outfits</option>
+    </select>
     <div class="outfit-nav">
       <button class="btn-icon" onclick="prevOutfit()" aria-label="Previous"><i class="ti ti-chevron-left"></i></button>
-      <span class="outfit-counter" id="ocounter">1 of 37</span>
+      <span class="outfit-counter" id="ocounter"></span>
       <button class="btn-icon" onclick="nextOutfit()" aria-label="Next"><i class="ti ti-chevron-right"></i></button>
     </div>
     <button class="shuffle-btn" onclick="shuffleOutfit()"><i class="ti ti-arrows-shuffle" style="font-size:16px"></i>Shuffle</button>
@@ -230,6 +240,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -275,6 +289,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -320,6 +338,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -365,6 +387,10 @@ const OUTFITS = [
         "key": "S9",
         "name": "Grey socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -410,6 +436,10 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -455,6 +485,10 @@ const OUTFITS = [
         "key": "S8",
         "name": "Navy/green stripe socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -500,6 +534,10 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -545,6 +583,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -590,6 +632,10 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -635,6 +681,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -680,6 +730,10 @@ const OUTFITS = [
         "key": "S8",
         "name": "Navy/green stripe socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -725,6 +779,10 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "spring"
     ]
   },
   {
@@ -770,6 +828,11 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter",
+      "spring"
     ]
   },
   {
@@ -815,6 +878,10 @@ const OUTFITS = [
         "key": "S9",
         "name": "Grey socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "spring"
     ]
   },
   {
@@ -860,6 +927,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -910,6 +981,10 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -960,6 +1035,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -1010,6 +1089,10 @@ const OUTFITS = [
         "key": "S5",
         "name": "Black socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -1060,6 +1143,10 @@ const OUTFITS = [
         "key": "S6",
         "name": "Blue/teal stripe socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -1110,6 +1197,10 @@ const OUTFITS = [
         "key": "S5",
         "name": "Black socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -1160,6 +1251,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -1210,6 +1305,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -1260,6 +1359,10 @@ const OUTFITS = [
         "key": "S5",
         "name": "Black socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -1310,6 +1413,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -1355,6 +1462,10 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -1400,6 +1511,10 @@ const OUTFITS = [
         "key": "S5",
         "name": "Black socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -1445,6 +1560,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -1490,6 +1609,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -1540,6 +1663,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -1585,6 +1712,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -1630,6 +1761,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -1675,6 +1810,10 @@ const OUTFITS = [
         "key": "S9",
         "name": "Grey socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -1720,6 +1859,10 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -1765,6 +1908,10 @@ const OUTFITS = [
         "key": "S9",
         "name": "Grey socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -1810,6 +1957,10 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -1855,6 +2006,11 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter",
+      "spring"
     ]
   },
   {
@@ -1900,6 +2056,11 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter",
+      "spring"
     ]
   },
   {
@@ -1945,6 +2106,11 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter",
+      "spring"
     ]
   },
   {
@@ -1990,6 +2156,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -2035,6 +2205,11 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "spring",
+      "summer",
+      "autumn"
     ]
   },
   {
@@ -2080,6 +2255,10 @@ const OUTFITS = [
         "key": "S9",
         "name": "Grey socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -2125,6 +2304,11 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter",
+      "spring"
     ]
   },
   {
@@ -2170,6 +2354,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -2215,6 +2403,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -2260,6 +2452,10 @@ const OUTFITS = [
         "key": "S8",
         "name": "Navy/green stripe socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -2305,6 +2501,10 @@ const OUTFITS = [
         "key": "S9",
         "name": "Grey socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -2350,6 +2550,11 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter",
+      "spring"
     ]
   },
   {
@@ -2395,6 +2600,11 @@ const OUTFITS = [
         "key": "S5",
         "name": "Black socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter",
+      "spring"
     ]
   },
   {
@@ -2440,6 +2650,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -2485,6 +2699,11 @@ const OUTFITS = [
         "key": "S5",
         "name": "Black socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter",
+      "spring"
     ]
   },
   {
@@ -2530,6 +2749,10 @@ const OUTFITS = [
         "key": "S9",
         "name": "Grey socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -2575,6 +2798,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -2620,6 +2847,11 @@ const OUTFITS = [
         "key": "S5",
         "name": "Black socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter",
+      "spring"
     ]
   },
   {
@@ -2665,6 +2897,11 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter",
+      "spring"
     ]
   },
   {
@@ -2710,6 +2947,11 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter",
+      "spring"
     ]
   },
   {
@@ -2755,6 +2997,11 @@ const OUTFITS = [
         "key": "S3",
         "name": "Teal socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter",
+      "spring"
     ]
   },
   {
@@ -2800,6 +3047,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -2845,6 +3096,11 @@ const OUTFITS = [
         "key": "S5",
         "name": "Black socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter",
+      "spring"
     ]
   },
   {
@@ -2890,6 +3146,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -2935,6 +3195,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -2980,6 +3244,11 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "spring",
+      "autumn",
+      "summer"
     ]
   },
   {
@@ -3025,6 +3294,11 @@ const OUTFITS = [
         "key": "S5",
         "name": "Black socks"
       }
+    ],
+    "seasons": [
+      "spring",
+      "autumn",
+      "summer"
     ]
   },
   {
@@ -3070,6 +3344,10 @@ const OUTFITS = [
         "key": "S9",
         "name": "Grey socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -3115,6 +3393,11 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "spring",
+      "summer",
+      "autumn"
     ]
   },
   {
@@ -3160,6 +3443,11 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter",
+      "spring"
     ]
   },
   {
@@ -3205,6 +3493,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -3250,6 +3542,11 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter",
+      "spring"
     ]
   },
   {
@@ -3295,6 +3592,11 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter",
+      "spring"
     ]
   },
   {
@@ -3340,6 +3642,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -3385,6 +3691,11 @@ const OUTFITS = [
         "key": "S2",
         "name": "Navy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter",
+      "spring"
     ]
   },
   {
@@ -3430,6 +3741,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "winter",
+      "autumn"
     ]
   },
   {
@@ -3475,6 +3790,10 @@ const OUTFITS = [
         "key": "S1",
         "name": "Burgundy socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter"
     ]
   },
   {
@@ -3520,6 +3839,11 @@ const OUTFITS = [
         "key": "S5",
         "name": "Black socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter",
+      "spring"
     ]
   },
   {
@@ -3565,6 +3889,11 @@ const OUTFITS = [
         "key": "S5",
         "name": "Black socks"
       }
+    ],
+    "seasons": [
+      "autumn",
+      "winter",
+      "spring"
     ]
   },
   {
@@ -3610,6 +3939,1091 @@ const OUTFITS = [
         "key": "S7",
         "name": "Black confetti socks"
       }
+    ],
+    "seasons": [
+      "winter"
+    ]
+  },
+  {
+    "id": 91,
+    "title": "Light Grey Houndstooth — Spring Blue",
+    "category": "Separates",
+    "rationale": "Sky blue and the light blue medallion keep everything fresh against light grey. Tan Oxfords lift it out of winter mode.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Jacket",
+        "key": "J5",
+        "name": "Light grey houndstooth jacket"
+      },
+      {
+        "role": "Trousers",
+        "key": "T2",
+        "name": "Dark navy trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_B1",
+        "name": "Sky blue plain shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI2",
+        "name": "Light blue medallion tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH3",
+        "name": "Tan Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B2",
+        "name": "Tan leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S2",
+        "name": "Navy socks"
+      }
+    ],
+    "seasons": [
+      "spring",
+      "summer"
+    ]
+  },
+  {
+    "id": 92,
+    "title": "Light Grey Houndstooth — Lilac & Purple",
+    "category": "Separates",
+    "rationale": "Lilac stripe with a solid purple tie is the clearest spring signal in your wardrobe. Black trousers keep it work-sharp.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Jacket",
+        "key": "J5",
+        "name": "Light grey houndstooth jacket"
+      },
+      {
+        "role": "Trousers",
+        "key": "T1",
+        "name": "Black plain trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_P1",
+        "name": "Lilac/white stripe shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI14",
+        "name": "Deep purple solid tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH1",
+        "name": "Black Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B1",
+        "name": "Black leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S4",
+        "name": "Lavender socks"
+      }
+    ],
+    "seasons": [
+      "spring"
+    ]
+  },
+  {
+    "id": 93,
+    "title": "Grey/Blue Check — Lilac Foulard",
+    "category": "Separates",
+    "rationale": "The check's cool blue-grey sits naturally beside lilac. The navy/pink foulard picks up both colours at once.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Jacket",
+        "key": "J2",
+        "name": "Grey/blue check jacket"
+      },
+      {
+        "role": "Trousers",
+        "key": "T2",
+        "name": "Dark navy trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_P1",
+        "name": "Lilac/white stripe shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI9",
+        "name": "Navy/pink foulard tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH1",
+        "name": "Black Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B1",
+        "name": "Black leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S4",
+        "name": "Lavender socks"
+      }
+    ],
+    "seasons": [
+      "spring"
+    ]
+  },
+  {
+    "id": 94,
+    "title": "Grey/Blue Check — Steel Blue & Tan",
+    "category": "Separates",
+    "rationale": "Stripe shirt and steel blue tie keep it cool; tan Oxfords and teal socks make it feel like the clocks have gone forward.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Jacket",
+        "key": "J2",
+        "name": "Grey/blue check jacket"
+      },
+      {
+        "role": "Trousers",
+        "key": "T2",
+        "name": "Dark navy trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_B2",
+        "name": "Blue/white stripe shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI8",
+        "name": "Steel blue medallion tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH3",
+        "name": "Tan Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B2",
+        "name": "Tan leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S3",
+        "name": "Teal socks"
+      }
+    ],
+    "seasons": [
+      "spring",
+      "summer"
+    ]
+  },
+  {
+    "id": 95,
+    "title": "Navy SB — Spring Lilac",
+    "category": "Separates",
+    "rationale": "Navy and lilac is a natural pairing. Tan shoes instead of black are what make it a spring look rather than an office default.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Jacket",
+        "key": "J9",
+        "name": "Navy single-breasted jacket"
+      },
+      {
+        "role": "Trousers",
+        "key": "T2",
+        "name": "Dark navy trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_P1",
+        "name": "Lilac/white stripe shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI9",
+        "name": "Navy/pink foulard tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH3",
+        "name": "Tan Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B2",
+        "name": "Tan leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S4",
+        "name": "Lavender socks"
+      }
+    ],
+    "seasons": [
+      "spring",
+      "summer"
+    ]
+  },
+  {
+    "id": 96,
+    "title": "Navy SB — Light Blue Medallion",
+    "category": "Separates",
+    "rationale": "A pale tie on a navy jacket reads light and approachable. The stripe socks are a small bit of fun that suits the season.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Jacket",
+        "key": "J9",
+        "name": "Navy single-breasted jacket"
+      },
+      {
+        "role": "Trousers",
+        "key": "T2",
+        "name": "Dark navy trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_W1",
+        "name": "White plain shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI2",
+        "name": "Light blue medallion tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH3",
+        "name": "Tan Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B2",
+        "name": "Tan leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S6",
+        "name": "Blue/teal stripe socks"
+      }
+    ],
+    "seasons": [
+      "spring",
+      "summer"
+    ]
+  },
+  {
+    "id": 97,
+    "title": "Houndstooth — Lilac",
+    "category": "Separates",
+    "rationale": "Lilac softens the black/white houndstooth considerably. A solid purple tie keeps the pattern count to two.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Jacket",
+        "key": "J1",
+        "name": "Black/white houndstooth jacket"
+      },
+      {
+        "role": "Trousers",
+        "key": "T1",
+        "name": "Black plain trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_P1",
+        "name": "Lilac/white stripe shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI14",
+        "name": "Deep purple solid tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH1",
+        "name": "Black Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B1",
+        "name": "Black leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S4",
+        "name": "Lavender socks"
+      }
+    ],
+    "seasons": [
+      "spring"
+    ]
+  },
+  {
+    "id": 98,
+    "title": "Navy DB Jacket — Lilac Tonal",
+    "category": "Separates",
+    "rationale": "Tonal navy lifted by the lilac stripe. The navy/pink foulard brings both colour threads together.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Jacket",
+        "key": "J6",
+        "name": "Navy double-breasted jacket"
+      },
+      {
+        "role": "Trousers",
+        "key": "T2",
+        "name": "Dark navy trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_P1",
+        "name": "Lilac/white stripe shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI9",
+        "name": "Navy/pink foulard tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH1",
+        "name": "Black Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B1",
+        "name": "Black leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S4",
+        "name": "Lavender socks"
+      }
+    ],
+    "seasons": [
+      "spring"
+    ]
+  },
+  {
+    "id": 99,
+    "title": "Light Grey — Silver Micro-dot",
+    "category": "Separates",
+    "rationale": "All cool, all light: micro-dot shirt, silver tie, grey socks. Tan Oxfords add the only warmth.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Jacket",
+        "key": "J5",
+        "name": "Light grey houndstooth jacket"
+      },
+      {
+        "role": "Trousers",
+        "key": "T2",
+        "name": "Dark navy trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_B3",
+        "name": "Blue micro-dot shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI5",
+        "name": "Silver oval geometric tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH3",
+        "name": "Tan Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B2",
+        "name": "Tan leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S9",
+        "name": "Grey socks"
+      }
+    ],
+    "seasons": [
+      "spring",
+      "summer"
+    ]
+  },
+  {
+    "id": 100,
+    "title": "Black SB — Light Blue Lift",
+    "category": "Separates",
+    "rationale": "Black can look heavy once the light changes. Sky blue, a pale tie and teal socks lighten it without losing the sharpness.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Jacket",
+        "key": "J8",
+        "name": "Black single-breasted jacket"
+      },
+      {
+        "role": "Trousers",
+        "key": "T1",
+        "name": "Black plain trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_B1",
+        "name": "Sky blue plain shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI2",
+        "name": "Light blue medallion tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH1",
+        "name": "Black Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B1",
+        "name": "Black leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S3",
+        "name": "Teal socks"
+      }
+    ],
+    "seasons": [
+      "spring",
+      "summer"
+    ]
+  },
+  {
+    "id": 101,
+    "title": "Brown Houndstooth — Spring Sky",
+    "category": "Separates",
+    "rationale": "The brown houndstooth doesn't have to wait for autumn. Navy trousers, sky blue and a silver tie make it feel lighter.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Jacket",
+        "key": "J4",
+        "name": "Brown/grey houndstooth jacket"
+      },
+      {
+        "role": "Trousers",
+        "key": "T2",
+        "name": "Dark navy trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_B1",
+        "name": "Sky blue plain shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI5",
+        "name": "Silver oval geometric tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH3",
+        "name": "Tan Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B2",
+        "name": "Tan leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S9",
+        "name": "Grey socks"
+      }
+    ],
+    "seasons": [
+      "spring"
+    ]
+  },
+  {
+    "id": 102,
+    "title": "Light Grey — Summer Teal",
+    "category": "Separates",
+    "rationale": "Your lightest jacket with your coolest colours. Easy to take off and carry once the classroom warms up.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Jacket",
+        "key": "J5",
+        "name": "Light grey houndstooth jacket"
+      },
+      {
+        "role": "Trousers",
+        "key": "T2",
+        "name": "Dark navy trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_B1",
+        "name": "Sky blue plain shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI8",
+        "name": "Steel blue medallion tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH3",
+        "name": "Tan Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B2",
+        "name": "Tan leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S3",
+        "name": "Teal socks"
+      }
+    ],
+    "seasons": [
+      "summer",
+      "spring"
+    ]
+  },
+  {
+    "id": 103,
+    "title": "Light Grey — Summer Pink",
+    "category": "Separates",
+    "rationale": "White shirt and the navy/pink foulard look crisp on a bright day. Lavender socks quietly echo the tie.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Jacket",
+        "key": "J5",
+        "name": "Light grey houndstooth jacket"
+      },
+      {
+        "role": "Trousers",
+        "key": "T2",
+        "name": "Dark navy trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_W1",
+        "name": "White plain shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI9",
+        "name": "Navy/pink foulard tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH3",
+        "name": "Tan Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B2",
+        "name": "Tan leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S4",
+        "name": "Lavender socks"
+      }
+    ],
+    "seasons": [
+      "summer",
+      "spring"
+    ]
+  },
+  {
+    "id": 104,
+    "title": "Grey/Blue Check — Summer Silver",
+    "category": "Separates",
+    "rationale": "White and silver under the check is the lightest way to wear it. Tan Oxfords and grey socks keep it summery.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Jacket",
+        "key": "J2",
+        "name": "Grey/blue check jacket"
+      },
+      {
+        "role": "Trousers",
+        "key": "T2",
+        "name": "Dark navy trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_W1",
+        "name": "White plain shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI5",
+        "name": "Silver oval geometric tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH3",
+        "name": "Tan Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B2",
+        "name": "Tan leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S9",
+        "name": "Grey socks"
+      }
+    ],
+    "seasons": [
+      "summer",
+      "spring"
+    ]
+  },
+  {
+    "id": 105,
+    "title": "Navy SB — Summer Stripe",
+    "category": "Separates",
+    "rationale": "Stripe shirt and steel blue tie keep a navy jacket feeling cool. Tan shoes and teal socks finish it for summer.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Jacket",
+        "key": "J9",
+        "name": "Navy single-breasted jacket"
+      },
+      {
+        "role": "Trousers",
+        "key": "T2",
+        "name": "Dark navy trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_B2",
+        "name": "Blue/white stripe shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI8",
+        "name": "Steel blue medallion tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH3",
+        "name": "Tan Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B2",
+        "name": "Tan leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S3",
+        "name": "Teal socks"
+      }
+    ],
+    "seasons": [
+      "summer",
+      "spring"
+    ]
+  },
+  {
+    "id": 106,
+    "title": "Hot Day — Sky & Navy",
+    "category": "Hot day",
+    "rationale": "Sleeves rolled once you're in the classroom. A small square dot tie stays smart without feeling heavy.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Trousers",
+        "key": "T2",
+        "name": "Dark navy trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_B1",
+        "name": "Sky blue plain shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI13",
+        "name": "Navy square dot tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH3",
+        "name": "Tan Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B2",
+        "name": "Tan leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S2",
+        "name": "Navy socks"
+      }
+    ],
+    "seasons": [
+      "hot",
+      "summer"
+    ]
+  },
+  {
+    "id": 107,
+    "title": "Hot Day — Crisp White",
+    "category": "Hot day",
+    "rationale": "White and black with a navy stripe tie is the most formal no-jacket look you have. Keep a black jacket on the back of the chair.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Trousers",
+        "key": "T1",
+        "name": "Black plain trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_W1",
+        "name": "White plain shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI12",
+        "name": "Navy diagonal stripe tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH1",
+        "name": "Black Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B1",
+        "name": "Black leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S5",
+        "name": "Black socks"
+      }
+    ],
+    "seasons": [
+      "hot",
+      "summer"
+    ]
+  },
+  {
+    "id": 108,
+    "title": "Hot Day — Lilac",
+    "category": "Hot day",
+    "rationale": "Lilac with a solid purple tie does the work a jacket normally would. Lavender socks complete it.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Trousers",
+        "key": "T2",
+        "name": "Dark navy trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_P1",
+        "name": "Lilac/white stripe shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI14",
+        "name": "Deep purple solid tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH1",
+        "name": "Black Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B1",
+        "name": "Black leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S4",
+        "name": "Lavender socks"
+      }
+    ],
+    "seasons": [
+      "hot",
+      "summer"
+    ]
+  },
+  {
+    "id": 109,
+    "title": "Hot Day — Micro-dot",
+    "category": "Hot day",
+    "rationale": "Small patterns hide creases and warm-day wear better than plain cotton. The pale tie keeps it light.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Trousers",
+        "key": "T2",
+        "name": "Dark navy trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_B3",
+        "name": "Blue micro-dot shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI2",
+        "name": "Light blue medallion tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH3",
+        "name": "Tan Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B2",
+        "name": "Tan leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S3",
+        "name": "Teal socks"
+      }
+    ],
+    "seasons": [
+      "hot",
+      "summer"
+    ]
+  },
+  {
+    "id": 110,
+    "title": "Hot Day — Stripe & Steel",
+    "category": "Hot day",
+    "rationale": "Stripe shirt and steel blue tie over black trousers — cool colours for a warm room.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Trousers",
+        "key": "T1",
+        "name": "Black plain trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_B2",
+        "name": "Blue/white stripe shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI8",
+        "name": "Steel blue medallion tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH1",
+        "name": "Black Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B1",
+        "name": "Black leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S2",
+        "name": "Navy socks"
+      }
+    ],
+    "seasons": [
+      "hot",
+      "summer"
+    ]
+  },
+  {
+    "id": 111,
+    "title": "Hot Day — White & Gold",
+    "category": "Hot day",
+    "rationale": "Gold against white on navy trousers looks bright and deliberate on a sunny day. Tan shoes keep it relaxed.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Trousers",
+        "key": "T2",
+        "name": "Dark navy trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_W1",
+        "name": "White plain shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI16",
+        "name": "Gold basketweave tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH3",
+        "name": "Tan Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B2",
+        "name": "Tan leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S2",
+        "name": "Navy socks"
+      }
+    ],
+    "seasons": [
+      "hot",
+      "summer"
+    ]
+  },
+  {
+    "id": 112,
+    "title": "Hot Day — Lilac Foulard",
+    "category": "Hot day",
+    "rationale": "Navy/pink foulard on lilac stripe over black trousers. A tie that matches the shirt is enough on its own.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Trousers",
+        "key": "T1",
+        "name": "Black plain trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_P1",
+        "name": "Lilac/white stripe shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI9",
+        "name": "Navy/pink foulard tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH1",
+        "name": "Black Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B1",
+        "name": "Black leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S4",
+        "name": "Lavender socks"
+      }
+    ],
+    "seasons": [
+      "hot",
+      "summer"
+    ]
+  },
+  {
+    "id": 113,
+    "title": "Hot Day — Brown & Silver",
+    "category": "Hot day",
+    "rationale": "Sky blue and a silver tie stop brown trousers feeling wintry. Tan shoes and grey socks keep it light.",
+    "altShirt": null,
+    "altShirtName": null,
+    "items": [
+      {
+        "role": "Trousers",
+        "key": "T3",
+        "name": "Dark brown trousers"
+      },
+      {
+        "role": "Shirt",
+        "key": "SH_B1",
+        "name": "Sky blue plain shirt"
+      },
+      {
+        "role": "Tie",
+        "key": "TI5",
+        "name": "Silver oval geometric tie"
+      },
+      {
+        "role": "Shoes",
+        "key": "SH3",
+        "name": "Tan Oxford"
+      },
+      {
+        "role": "Belt",
+        "key": "B2",
+        "name": "Tan leather belt"
+      },
+      {
+        "role": "Socks",
+        "key": "S9",
+        "name": "Grey socks"
+      }
+    ],
+    "seasons": [
+      "hot",
+      "summer"
     ]
   }
 ];
@@ -3674,6 +5088,26 @@ const WARDROBE_ITEMS = [
 let curOutfit = 0;
 let curFilter = 'all';
 let history = [];
+const SEASONS={autumn:'Autumn',winter:'Winter',spring:'Spring',summer:'Summer',hot:'Hot day',all:'All'};
+let season='autumn', list=[];
+function autoSeason(){const m=new Date().getMonth();return m>=2&&m<=4?'spring':m>=5&&m<=7?'summer':m>=8&&m<=10?'autumn':'winter';}
+function loadSeason(){
+  let pick=null;
+  try{const v=JSON.parse(localStorage.getItem('outfit_season_v1')||'null');if(v&&v.auto===autoSeason())pick=v.pick;}catch(e){}
+  season=SEASONS[pick]?pick:autoSeason();
+}
+function buildList(){
+  list=season==='all'?OUTFITS.slice():OUTFITS.map((o,i)=>[o,i]).filter(([o])=>o.seasons.includes(season))
+    .sort((a,b)=>(a[0].seasons.indexOf(season)-b[0].seasons.indexOf(season))||(a[1]-b[1])).map(x=>x[0]);
+  document.getElementById('season').value=season;
+  const label=season==='all'?'':SEASONS[season].toLowerCase()+' ';
+  document.getElementById('osub').textContent=`${list.length} ${label}outfits — swipe through and pick your look`;
+}
+function setSeason(s){
+  season=s;
+  try{localStorage.setItem('outfit_season_v1',JSON.stringify({pick:s,auto:autoSeason()}));}catch(e){}
+  buildList();curOutfit=0;renderOutfit();
+}
 
 function toast(msg,dur=2000){
   const t=document.getElementById('toast');
@@ -3715,8 +5149,8 @@ function renderWardrobe(){
 }
 
 function renderOutfit(){
-  const o=OUTFITS[curOutfit];
-  document.getElementById('ocounter').textContent=`${curOutfit+1} of ${OUTFITS.length}`;
+  const o=list[curOutfit];
+  document.getElementById('ocounter').textContent=`${curOutfit+1} of ${list.length}`;
   const wornToday=history.some(h=>h.id===o.id&&h.date===today());
   const itemsHtml=o.items.map(item=>`
     <div class="orow">
@@ -3729,7 +5163,7 @@ function renderOutfit(){
   const altHtml=o.altShirt?`<div class="alt-shirt"><strong>Also works with:</strong> ${o.altShirtName} <img src="${IMGS[o.altShirt]||''}" alt="${o.altShirtName}" style="width:44px;height:52px;border-radius:6px;object-fit:cover;vertical-align:middle;margin-left:8px;border:.5px solid var(--border)" /></div>`:'';
   document.getElementById('ocard-container').innerHTML=`
     <div class="ocard">
-      <div class="ocat">${o.category} · Outfit ${curOutfit+1}</div>
+      <div class="ocat">${o.category} · ${o.seasons.filter(x=>x!=='hot').map(x=>SEASONS[x]).join(' / ')}</div>
       <div class="otitle">${o.title}</div>
       <div class="oration">${o.rationale}</div>
       ${altHtml}
@@ -3743,16 +5177,16 @@ function renderOutfit(){
 }
 
 function prevOutfit(){
-  curOutfit=(curOutfit-1+OUTFITS.length)%OUTFITS.length;
+  curOutfit=(curOutfit-1+list.length)%list.length;
   renderOutfit();
 }
 function nextOutfit(){
-  curOutfit=(curOutfit+1)%OUTFITS.length;
+  curOutfit=(curOutfit+1)%list.length;
   renderOutfit();
 }
 function shuffleOutfit(){
   let next;
-  do{next=Math.floor(Math.random()*OUTFITS.length);}while(next===curOutfit&&OUTFITS.length>1);
+  do{next=Math.floor(Math.random()*list.length);}while(next===curOutfit&&list.length>1);
   curOutfit=next;
   renderOutfit();
 }
@@ -3830,6 +5264,8 @@ function closeLightbox(){
 }
 
 loadHistory();
+loadSeason();
+buildList();
 renderOutfit();
 </script>
 </body>
