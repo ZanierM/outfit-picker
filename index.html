@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
 <title>Outfit Picker</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
 <style>
@@ -25,10 +25,10 @@
   }
 }
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans)}
-#app{max-width:430px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
-.screen{display:none;flex:1;flex-direction:column;padding:1.25rem 1rem 90px;overflow-y:auto}
+#app{max-width:500px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+.screen{display:none;flex:1;flex-direction:column;padding:max(1.25rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) 90px max(1rem,env(safe-area-inset-left));overflow-y:auto}
 .screen.active{display:flex}
-.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;display:flex;background:var(--bg);border-top:.5px solid var(--border2);z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:500px;display:flex;background:var(--bg);border-top:.5px solid var(--border2);z-index:100;padding-bottom:env(safe-area-inset-bottom)}
 .nav-tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0 12px;cursor:pointer;border:none;background:none;color:var(--text3);font-size:11px;font-family:var(--sans);transition:color .15s;-webkit-tap-highlight-color:transparent}
 .nav-tab i{font-size:22px}
 .nav-tab.active{color:var(--text)}
@@ -94,6 +94,37 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:500;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
 .lightbox.open{display:flex}
 .lightbox img{max-width:92vw;max-height:88vh;border-radius:var(--radius-lg);object-fit:contain}
+
+/* iPhone Duo unfolded held upright (~626 wide) and other mid-size screens: wider column, items in two columns */
+@media (min-width:560px){
+  #app{max-width:720px}
+  .nav{max-width:720px}
+  .oitems{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  #hlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  #hlist .hcard{margin-bottom:0}
+}
+/* iPhone Duo unfolded (~890 x 626, landscape): two panels split at the fold.
+   Left: picker controls and the outfit write-up. Right: the clothes. */
+@media (min-width:760px) and (orientation:landscape){
+  #app{max-width:1000px}
+  .nav{max-width:none}
+  #s-outfits.active{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:44px;align-content:start;align-items:start}
+  #s-outfits > *{grid-column:1}
+  #ocard-container,#s-outfits .ocard{display:contents}
+  #s-outfits .odiv{display:none}
+  #s-outfits .oinfo{grid-column:1;background:var(--bg);border:.5px solid var(--border2);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:10px}
+  #s-outfits .oact{grid-column:1}
+  #s-outfits .oitems{grid-column:2;grid-row:1 / span 30;align-self:start;margin:0;
+    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px 10px}
+  #s-outfits .orow{flex-direction:column;align-items:stretch;gap:5px}
+  #s-outfits .othumb{width:100%;height:auto;aspect-ratio:4/5}
+  #s-outfits .oiname{white-space:normal;font-size:12px;line-height:1.3;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  #s-outfits .stitle{font-size:20px}
+  #s-outfits .ssub{margin-bottom:.75rem}
+  #s-outfits .season-select,#s-outfits .outfit-nav,#s-outfits .shuffle-btn{margin-bottom:.6rem}
+  #hlist{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
 </style>
 </head>
 <body>
@@ -5163,16 +5194,18 @@ function renderOutfit(){
   const altHtml=o.altShirt?`<div class="alt-shirt"><strong>Also works with:</strong> ${o.altShirtName} <img src="${IMGS[o.altShirt]||''}" alt="${o.altShirtName}" style="width:44px;height:52px;border-radius:6px;object-fit:cover;vertical-align:middle;margin-left:8px;border:.5px solid var(--border)" /></div>`:'';
   document.getElementById('ocard-container').innerHTML=`
     <div class="ocard">
+      <div class="oinfo">
       <div class="ocat">${o.category} · ${o.seasons.filter(x=>x!=='hot').map(x=>SEASONS[x]).join(' / ')}</div>
       <div class="otitle">${o.title}</div>
       <div class="oration">${o.rationale}</div>
       ${altHtml}
+      </div>
       <div class="odiv"></div>
       <div class="oitems">${itemsHtml}</div>
-      <button class="wore-btn ${wornToday?'worn':''}" onclick="logWorn(${o.id})">
+      <div class="oact"><button class="wore-btn ${wornToday?'worn':''}" onclick="logWorn(${o.id})">
         <i class="ti ${wornToday?'ti-check':'ti-calendar-plus'}"></i>
         ${wornToday?'Logged today':'I wore this'}
-      </button>
+      </button></div>
     </div>`;
 }
 
